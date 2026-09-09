@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "./apiPaths";
+import { triggerLogout } from "../context/authBridge";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -31,7 +32,9 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      if (error.response.status === 500) {
+      if (error.response?.status === 401) {
+        triggerLogout();
+      } else if (error.response?.status === 500) {
         console.error("Server error, Please try again later.");
       }
     } else if (error.code === "ECONNABORTED") {

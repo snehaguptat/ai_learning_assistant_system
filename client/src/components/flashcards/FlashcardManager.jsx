@@ -30,7 +30,8 @@ const FlashcardManager = ({ documentId }) => {
   const fetchFlashcardSets = async () => {
     setLoading(true);
     try {
-      const response = await flashcardService.getAllFlashcardSets(documentId);
+      const response =
+        await flashcardService.getFlashcardsForDocument(documentId);
       if (response.count !== 0) setFlashcardSets(response.data);
     } catch (error) {
       toast.error("Failed to fetch flashcards.");

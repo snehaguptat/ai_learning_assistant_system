@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+import { jwtDecode } from "jwt-decode";
+
+import { registerLogoutHandler } from "./authBridge.js";
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -16,15 +20,24 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
+    registerLogoutHandler(logout);
     checkAuthStatus();
   }, []);
 
+  const isTokenExpired = (token) => {
+    try {
+      const { exp } = jwtDecode(token);
+      return exp * 1000 < Date.now();
+    } catch {
+      return true;
+    }
+  };
   const checkAuthStatus = async () => {
     try {
       const token = localStorage.getItem("token");
       const userStr = localStorage.getItem("user");
 
-      if (token && userStr) {
+      if (token && userStr && !isTokenExpired(token)) {
         const userData = JSON.parse(userStr);
         setUser(userData);
         setAuthenticated(true);

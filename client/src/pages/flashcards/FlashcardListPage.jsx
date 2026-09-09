@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import flashcardService from "../../services/flashcardService.js";
-import pageHeader from "../../components/common/PageHeader.jsx";
 import Spinner from "../../components/common/Spinner.jsx";
 import EmptyState from "../../components/common/EmptyState.jsx";
 import FlashcardSetCard from "../../components/flashcards/FlashcardSetCard.jsx";

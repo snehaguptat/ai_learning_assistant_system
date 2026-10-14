@@ -1,15 +1,248 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 @import "tailwindcss";
 
+/* ──────────────────────────────────────────────────────────────
+   DESIGN TOKENS — "Obsidian & Ember"
+   Near-black canvas, warm-white text, one orange accent.
+   Every color in the app should come from here, so the whole
+   theme can be re-tuned by editing this single block.
+   ────────────────────────────────────────────────────────────── */
+@theme {
+  /* Typography */
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas,
+    monospace;
 
-@theme{
-    --font-display: "Urbanist", sans-serif;
-    --breakppoint-3xl: 1920px;
-    --color-primary: #FF9324
+  --breakpoint-3xl: 1920px;
+
+  /* Surfaces (darkest → lightest) */
+  --color-canvas: #060606;
+  --color-surface: #0e0e0f;
+  --color-raised: #151516;
+  --color-overlay: #1c1c1e;
+
+  /* Hairlines */
+  --color-line: #222224;
+  --color-line-strong: #36363a;
+
+  /* Text — warm white so it sits well next to orange */
+  --color-fg: #f5f2ed;
+  --color-fg-muted: #a9a59d;
+  --color-fg-subtle: #75726b;
+
+  /* Accent (orange). accent-fg is the text color ON orange: black passes
+     WCAG AA, white does not. */
+  --color-accent: #ff6a1a;
+  --color-accent-hover: #ff8a47;
+  --color-accent-press: #e85a0c;
+  --color-accent-fg: #0a0a0a;
+  --color-primary: #ff6a1a;
+
+  /* Status — tuned to stay legible on black */
+  --color-success: #5fd08a;
+  --color-danger: #ff5c5c;
+  --color-warning: #f5b53d;
+
+  /* Elevation */
+  --shadow-glow: 0 0 0 1px rgb(255 106 26 / 0.4),
+    0 10px 36px -10px rgb(255 106 26 / 0.45);
+  --shadow-pop: 0 30px 80px -20px rgb(0 0 0 / 0.9),
+    0 0 0 1px rgb(255 255 255 / 0.04);
+
+  /* Motion */
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-fade-in: fade-in 0.3s ease-out both;
+  --animate-pop: pop 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
-@layer base{
-    html{
-        font-family:  var(--font-display);
-    }
+/* ── Base ─────────────────────────────────────────────────── */
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-canvas);
+  }
+  body {
+    @apply bg-canvas text-fg font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    background: rgb(255 106 26 / 0.35);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  button:not(:disabled),
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  /* Slim dark scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #2b2b2e transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2b2b2e;
+    border-radius: 999px;
+    border: 2px solid var(--color-canvas);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3e;
+  }
+}
+
+/* ── Reusable building blocks ─────────────────────────────── */
+@utility card {
+  @apply bg-surface border border-line rounded-xl;
+}
+
+@utility eyebrow {
+  @apply font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle;
+}
+
+@utility field-label {
+  @apply block mb-2 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle;
+}
+
+@utility field {
+  @apply w-full h-11 px-3.5 rounded-lg bg-canvas border border-line text-fg text-sm
+    placeholder:text-fg-subtle transition-colors duration-150
+    hover:border-line-strong
+    focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/15
+    disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 h-10 px-4 rounded-lg
+    text-sm font-semibold whitespace-nowrap select-none
+    transition-all duration-150 active:scale-[0.98]
+    disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100;
+}
+@utility btn-sm {
+  @apply h-8 px-3 text-xs;
+}
+@utility btn-lg {
+  @apply h-12 px-6;
+}
+@utility btn-primary {
+  @apply bg-accent text-accent-fg hover:bg-accent-hover hover:shadow-glow active:bg-accent-press;
+}
+@utility btn-secondary {
+  @apply bg-raised text-fg border border-line hover:bg-overlay hover:border-line-strong;
+}
+@utility btn-outline {
+  @apply bg-transparent text-fg border border-line-strong hover:border-accent hover:text-accent;
+}
+@utility btn-ghost {
+  @apply bg-transparent text-fg-muted hover:text-fg hover:bg-raised;
+}
+@utility btn-danger {
+  @apply bg-danger text-canvas hover:brightness-110;
+}
+
+@utility chip {
+  @apply inline-flex items-center gap-1.5 h-6 px-2.5 rounded-md border border-line
+    bg-raised text-xs font-medium text-fg-muted;
+}
+@utility chip-accent {
+  @apply border-accent/30 bg-accent/10 text-accent;
+}
+@utility chip-success {
+  @apply border-success/30 bg-success/10 text-success;
+}
+@utility chip-danger {
+  @apply border-danger/30 bg-danger/10 text-danger;
+}
+
+@utility icon-tile {
+  @apply inline-flex items-center justify-center shrink-0 rounded-lg border border-line
+    bg-raised text-fg-muted;
+}
+@utility icon-tile-accent {
+  @apply border-accent/30 bg-accent/10 text-accent;
+}
+
+/* Small inline spinner that inherits the button's text color */
+@utility spin-sm {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-top-color: currentColor;
+  animation: spin 0.7s linear infinite;
+}
+
+/* Decorative backgrounds */
+@utility bg-dots {
+  background-image: radial-gradient(
+    rgb(255 255 255 / 0.07) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+@utility bg-ember {
+  background-image: radial-gradient(
+    60% 100% at 50% 0%,
+    rgb(255 106 26 / 0.16),
+    transparent 70%
+  );
+}
+
+/* Markdown code blocks: fenced code inside <pre> shouldn't get inline-code chrome */
+pre code {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

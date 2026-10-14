@@ -87,7 +87,7 @@ const QuizTakePage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Spinner />;
+        <Spinner />
       </div>
     );
   }
@@ -96,7 +96,7 @@ const QuizTakePage = () => {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <p className="text-slate-600 text-lg">
+          <p className="text-fg-muted text-lg">
             Quiz not found or has no questions.
           </p>
         </div>
@@ -109,23 +109,23 @@ const QuizTakePage = () => {
   const answeredCount = Object.keys(selectedAnswers).length;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <PageHeader title={quiz.title || "Take Quiz"} />
+    <div className="max-w-3xl mx-auto space-y-6">
+      <PageHeader eyebrow="Quiz" title={quiz.title || "Take Quiz"} />
 
       {/* Progress Bar */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-semibold text-slate-700">
-            Question {currentQuestionIndex + 1} of {quiz.questions.length}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <span className="font-mono text-xs text-fg">
+            Question{" "}
+            <span className="text-accent">{currentQuestionIndex + 1}</span> /{" "}
+            {quiz.questions.length}
           </span>
-          <span className="text-sm font-medium text-slate-500">
-            {answeredCount} answered
-          </span>
+          <span className="eyebrow">{answeredCount} answered</span>
         </div>
 
-        <div className="relative h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div className="relative h-1 bg-raised rounded-full overflow-hidden">
           <div
-            className="absolute inset-y-0 left-0 bg-linear-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500 ease-out"
+            className="absolute inset-y-0 left-0 bg-accent rounded-full transition-all duration-500 ease-out"
             style={{
               width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%`,
             }}
@@ -134,15 +134,16 @@ const QuizTakePage = () => {
       </div>
 
       {/* Question Card */}
-      <div className="bg-white/80 backdrop-blur-xl border-2 border-slate-200 rounded-2xl shadow-xl shadow-slate-200 p-5">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl mb-6">
-          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-          <span className="text-sm font-semibold text-emerald-700">
-            Question {currentQuestionIndex + 1}
-          </span>
-        </div>
+      <div
+        key={currentQuestion._id}
+        className="card p-6 md:p-8 animate-fade-up"
+      >
+        <span className="chip chip-accent mb-6">
+          <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
+          Question {currentQuestionIndex + 1}
+        </span>
 
-        <h3 className="text-lg font-semibold text-slate-900 mb-6 leading-relaxed">
+        <h3 className="text-xl md:text-2xl font-semibold text-fg mb-8 leading-snug">
           {currentQuestion.question}
         </h3>
 
@@ -153,11 +154,11 @@ const QuizTakePage = () => {
             return (
               <label
                 key={index}
-                className={`group relative flex items-center p-3 border-2 rounded-xl cursor-pointer transition-all duration-200 
+                className={`group relative flex items-center gap-4 px-4 py-3.5 border rounded-xl cursor-pointer transition-colors duration-150 
                   ${
                     isSelected
-                      ? "border-emerald-500 bg-emerald-50 shadow-lg shadow-emerald-500/10"
-                      : "border-slate-200 bg-slate-50/50 hover:border-slate-300 hover:bg-white hover:shadow-md"
+                      ? "border-accent bg-accent/10"
+                      : "border-line bg-canvas hover:border-line-strong hover:bg-raised"
                   }`}
               >
                 <input
@@ -171,28 +172,21 @@ const QuizTakePage = () => {
                   className="sr-only"
                 />
 
-                {/* Custom Radio Button */}
+                {/* Option letter / radio */}
                 <div
-                  className={`shrink-0 w-5 h-5 rounded-full border-2 transition-all duration-200 
-                ${
-                  isSelected
-                    ? "border-emerald-500 bg-emerald-500"
-                    : "border-slate-300 bg-white group-hover:border-emerald-400"
-                }`}
+                  className={`shrink-0 w-7 h-7 rounded-md border flex items-center justify-center font-mono text-xs transition-colors duration-150 ${
+                    isSelected
+                      ? "border-accent bg-accent text-accent-fg font-medium"
+                      : "border-line-strong text-fg-subtle group-hover:border-accent/60 group-hover:text-fg"
+                  }`}
                 >
-                  {isSelected && (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                    </div>
-                  )}
+                  {String.fromCharCode(65 + index)}
                 </div>
 
                 {/* Option Text */}
                 <span
-                  className={`ml-4 text-sm font-medium transition-colors duration-200 ${
-                    isSelected
-                      ? "text-emerald-900"
-                      : "text-slate-700 group-hover:text-slate-900"
+                  className={`text-sm font-medium transition-colors duration-150 ${
+                    isSelected ? "text-fg" : "text-fg-muted group-hover:text-fg"
                   }`}
                 >
                   {option}
@@ -201,17 +195,14 @@ const QuizTakePage = () => {
                 {/* Selected Checkmark */}
                 {isSelected && (
                   <CheckCircle2
-                    className="ml-auto w-5 h-5 text-emerald-500"
-                    strokeWidth={2.5}
+                    className="ml-auto w-5 h-5 text-accent"
+                    strokeWidth={2.25}
                   />
                 )}
               </label>
             );
           })}
         </div>
-
-        {/* Navigation Buttons */}
-        <div className=""></div>
       </div>
 
       {/* Navigation Buttons */}
@@ -220,33 +211,28 @@ const QuizTakePage = () => {
           onClick={handlePrevQuestion}
           disabled={currentQuestionIndex === 0 || submitting}
           variant="secondary"
+          className="h-11 px-5"
         >
+          <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
           Previous
-          <ChevronLeft
-            className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200"
-            strokeWidth={2.5}
-          />
         </Button>
         {currentQuestionIndex === quiz.questions.length - 1 ? (
           <button
             onClick={handleSubmitQuiz}
             disabled={submitting}
-            className="group relative px-8 h-12 bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-emerald-500/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 overflow-hidden"
+            className="btn btn-primary btn-lg"
           >
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              {submitting ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="w-4 h-4" strokeWidth={2.5} />
-                  Submit Quiz
-                </>
-              )}
-            </span>
-            <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            {submitting ? (
+              <>
+                <div className="spin-sm" />
+                Submitting...
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="w-4 h-4" strokeWidth={2.5} />
+                Submit quiz
+              </>
+            )}
           </button>
         ) : (
           <Button
@@ -254,19 +240,16 @@ const QuizTakePage = () => {
             disabled={
               currentQuestionIndex === quiz.questions.length - 1 || submitting
             }
-            className=""
+            className="h-11 px-5"
           >
             Next
-            <ChevronRight
-              className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200"
-              strokeWidth={2.5}
-            />
+            <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
           </Button>
         )}
       </div>
 
       {/* Question navigation dots */}
-      <div className="mt-0 flex items-center justify-center gap-2 flex-wrap ">
+      <div className="flex items-center justify-center gap-2 flex-wrap pt-2">
         {quiz.questions.map((_, index) => {
           const isAnsweredQuestion = selectedAnswers.hasOwnProperty(
             quiz.questions[index]._id,
@@ -278,12 +261,12 @@ const QuizTakePage = () => {
               key={index}
               onClick={() => setCurrentQuestionIndex(index)}
               disabled={submitting}
-              className={`w-8 h-8 rounded-lg font-semibold text-xs transition-all duration-200 ${
+              className={`w-8 h-8 rounded-md border font-mono text-xs transition-colors duration-150 ${
                 isCurrent
-                  ? "bg-linear-to-r from-emerald-500 to-teal-500 text-white shdow-lg shadow-emerald-500/25 scale-110"
+                  ? "bg-accent border-accent text-accent-fg font-medium"
                   : isAnsweredQuestion
-                    ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    ? "bg-accent/10 border-accent/30 text-accent hover:bg-accent/20"
+                    : "bg-raised border-line text-fg-subtle hover:text-fg hover:border-line-strong"
               } disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {index + 1}

@@ -105,7 +105,6 @@ export const generateQuiz = async (text, numQuestions = 5) => {
     });
 
     const generatedText = response.text;
-    console.log(generatedText);
 
     const questions = [];
     const questionBlocks = generatedText

@@ -3,26 +3,21 @@ import React from "react";
 const Tabs = ({ tabs, activeTab, setActiveTab }) => {
   return (
     <div className="w-full">
-      <div className="relative border-b-2 border-slate-100">
-        <nav className="flex gap-2">
+      <div className="relative border-b border-line overflow-x-auto">
+        <nav className="flex gap-1 min-w-max">
           {tabs.map((tab) => {
+            const isActive = activeTab === tab.name;
             return (
               <button
                 key={tab.name}
                 onClick={() => setActiveTab(tab.name)}
-                className={`relative pb-4 px-2 md:px-6 text-sm font-semibold transition-all duration-200 cursor-pointer
-                ${
-                  activeTab === tab.name
-                    ? "text-emerald-600"
-                    : "text-slate-600 hover:text-slate-900"
+                className={`relative h-11 px-4 md:px-5 text-sm font-medium transition-colors duration-150 ${
+                  isActive ? "text-fg" : "text-fg-subtle hover:text-fg-muted"
                 }`}
               >
-                <span className="relative-z-10">{tab.label}</span>
-                {activeTab === tab.name && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full shadow-lg shdadow-emerald-500/25 transition-all duration-200" />
-                )}
-                {activeTab === tab.name && (
-                  <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/50 to-transparent rounded-t-xl -z-10" />
+                {tab.label}
+                {isActive && (
+                  <span className="absolute -bottom-px left-3 right-3 h-0.5 rounded-full bg-accent" />
                 )}
               </button>
             );
@@ -33,7 +28,7 @@ const Tabs = ({ tabs, activeTab, setActiveTab }) => {
         {tabs.map((tab) => {
           if (tab.name === activeTab) {
             return (
-              <div key={tab.name} className="animate-in fade-in duration-300">
+              <div key={tab.name} className="animate-fade-in">
                 {tab.content}
               </div>
             );

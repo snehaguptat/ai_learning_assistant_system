@@ -106,11 +106,15 @@ const QuizManager = ({ documentId }) => {
   };
 
   return (
-    <div className="bg-white border border-neutral-200 rounded-lg p-6">
-      <div className="flex justify-end gap-2 mb-4">
+    <div className="card p-6 md:p-8">
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <div>
+          <h3 className="text-xl font-semibold text-fg">Quizzes</h3>
+          <p className="eyebrow mt-2">Test what you've learned</p>
+        </div>
         <Button onClick={() => setIsGeneratingModalOpen(true)}>
-          <Plus size={16} />
-          Generate Quiz
+          <Plus size={16} strokeWidth={2.5} />
+          Generate quiz
         </Button>
       </div>
 
@@ -120,13 +124,11 @@ const QuizManager = ({ documentId }) => {
       <Modal
         isOpen={isGenerateModalOpen}
         onClose={() => setIsGeneratingModalOpen(false)}
-        title="Generate New Quiz"
+        title="Generate new quiz"
       >
-        <form onSubmit={handleGenerateQuiz} className="space-y-4">
+        <form onSubmit={handleGenerateQuiz} className="space-y-5">
           <div>
-            <label className="block text-xs font-medium text-neutral-700 mb-1.5">
-              Number of Questions
-            </label>
+            <label className="field-label">Number of questions</label>
             <input
               type="number"
               value={numQuestions}
@@ -135,59 +137,63 @@ const QuizManager = ({ documentId }) => {
               }
               min="1"
               required
-              className="w-full h-9 px-3 border border-neutral-200 rounded-lg bg-white text-sm text-neutral-900 placeholder-neutral-400 transition-colors duratin-200 focus:outline-none focus:ring-2 focus:ring-[#00d492] focus:border-transparent"
+              className="field font-mono"
             />
           </div>
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex justify-end gap-3 pt-2">
             <Button
               type="button"
               variant="secondary"
               onClick={() => setIsGeneratingModalOpen(false)}
               disabled={generating}
+              className="h-11"
             >
               Cancel
             </Button>
-            <Button type="submit" disable={generating}>
-              {generating ? "Generating..." : "Generate Quiz"}
+            <Button type="submit" disable={generating} className="h-11">
+              {generating ? "Generating..." : "Generate quiz"}
             </Button>
           </div>
         </form>
       </Modal>
 
-      {/* Delte confirmation Modal */}
+      {/* Delete confirmation Modal */}
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        title="Delete Selected Quiz"
+        title="Delete selected quiz"
       >
-        <div className="space-y-4">
-          <p className="text-sm text-neutral-600">
+        <div className="space-y-6">
+          <p className="text-sm text-fg-muted leading-relaxed">
             Are you sure you want to delete the quiz:{" "}
-            <span className="font-semibold text-neutral-600">
+            <span className="font-semibold text-fg">
               {selectedQuiz?.title || "this quiz"}
             </span>
             {"? "}
-            This action can not be undone.
+            This action cannot be undone.
           </p>
-          <div className="flex justify-end items-center gap-2 pt-2">
+          <div className="flex justify-end items-center gap-3 pt-2">
             <Button
               type="button"
               onClick={() => setIsDeleteModalOpen(false)}
-              variant="outline"
+              variant="secondary"
               disabled={deleting}
+              className="h-11"
             >
               Cancel
             </Button>
             <button
               onClick={handlelConfirmDelete}
               disabled={deleting}
-              className="px-3 h-11 rounded-lg text-white text-sm font-semibold bg-red-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-500 cursor-pointer flex justiy-center items-center gap-2"
+              className="btn btn-danger h-11"
             >
-              {deleting ? "Deleting..." : "Delete Quiz"}
               {deleting ? (
-                <div className="h-4 w-4 rounded-full border-3 border-white/30 border-t-white animate-spin" />
+                <>
+                  <div className="spin-sm" />
+                  Deleting...
+                </>
               ) : (
-                ""
+                "Delete quiz"
               )}
             </button>
           </div>

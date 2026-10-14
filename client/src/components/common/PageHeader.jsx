@@ -1,15 +1,16 @@
 import React from "react";
 
-const PageHeader = ({ title, subtitle, children }) => {
+const PageHeader = ({ title, subtitle, eyebrow, children }) => {
   return (
-    <div className="flex items-center justify-between mb-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-700 tracking-tight mb-2">
+    <div className="flex items-end justify-between gap-4 mb-8">
+      <div className="min-w-0">
+        {eyebrow && <p className="eyebrow text-accent! mb-3">{eyebrow}</p>}
+        <h1 className="text-3xl md:text-4xl font-semibold text-fg tracking-tight">
           {title}
         </h1>
-        {subtitle && <p className="text-slate-500 text-sm">{subtitle}</p>}
+        {subtitle && <p className="text-fg-muted text-sm mt-2">{subtitle}</p>}
       </div>
-      {children && <div>{children}</div>}
+      {children && <div className="shrink-0">{children}</div>}
     </div>
   );
 };

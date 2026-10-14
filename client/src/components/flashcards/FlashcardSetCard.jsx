@@ -3,7 +3,6 @@ import { BookOpen, Sparkles, TrendingUp } from "lucide-react";
 import moment from "moment";
 
 const FlashcardSetCard = ({ flashcardSet }) => {
-  console.log(flashcardSet);
   const navigate = useNavigate();
 
   const handleStudyNow = () => {
@@ -19,45 +18,38 @@ const FlashcardSetCard = ({ flashcardSet }) => {
 
   return (
     <div
-      className="group relative bg-white/80 backdrop-blur-xl border-2 border-slate-200 hover:border-emerald-300 rounded-2xl p-6 cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/10 flex flex-col justify-between"
+      className="group relative card h-full p-6 cursor-pointer transition-colors duration-200 hover:border-accent/40 hover:bg-raised flex flex-col justify-between"
       onClick={handleStudyNow}
     >
-      <div className="space-y-4">
+      <div className="space-y-5">
         {/* Icon and Title */}
         <div className="flex items-start gap-4">
-          <div className="shrink-0 w-12 h-12 rounded-xl bg-linear-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
-            <BookOpen className="w-6 h-6 text-emerald-600" strokeWidth={2} />
+          <div className="icon-tile icon-tile-accent w-11 h-11">
+            <BookOpen className="w-5 h-5" strokeWidth={2} />
           </div>
           <div className="flex-1 min-w-0">
             <h3
-              className="text-base font-semibold text-slate-900 line-clamp-2 mb-1"
+              className="text-base font-semibold text-fg line-clamp-2 mb-1"
               title={flashcardSet?.documentId?.title}
             >
               {flashcardSet?.documentId?.title}
             </h3>
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+            <p className="eyebrow">
               Created {moment(flashcardSet.createdAt).fromNow()}
             </p>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="flex items-center gap-3 pt-2">
-          <div className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg">
-            <span className="text-sm font-semibold text-slate-700">
-              {totalCards} {totalCards === 1 ? "Card" : "Cards"}
-            </span>
-          </div>
+        <div className="flex items-center gap-2">
+          <span className="chip">
+            {totalCards} {totalCards === 1 ? "Card" : "Cards"}
+          </span>
           {reviewedCount > 0 && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
-              <TrendingUp
-                className="w-3.5 h-3.5 text-emerald-600"
-                strokeWidth={2.5}
-              />
-              <span className="text-sm text-emerald-700 font-semibold">
-                {progressPercentage}%
-              </span>
-            </div>
+            <span className="chip chip-accent">
+              <TrendingUp className="w-3.5 h-3.5" strokeWidth={2.5} />
+              {progressPercentage}%
+            </span>
           )}
         </div>
 
@@ -65,16 +57,14 @@ const FlashcardSetCard = ({ flashcardSet }) => {
         {totalCards > 0 && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600 text-xs font-medium">
-                Progress
-              </span>
-              <span className="text-xs font-semibold text-slate-700">
+              <span className="eyebrow">Progress</span>
+              <span className="font-mono text-xs text-fg-muted">
                 {reviewedCount}/{totalCards} reviewed
               </span>
             </div>
-            <div className="relative h-2 w-full bg-slate-100 rounded-xl overflow-hidden">
+            <div className="relative h-1.5 w-full bg-raised rounded-full overflow-hidden">
               <div
-                className="absolute inset-y-0 left-0 bg-linear-to-r from-emerald-500 to-teal-500"
+                className="absolute inset-y-0 left-0 bg-accent rounded-full transition-all duration-500"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -82,19 +72,16 @@ const FlashcardSetCard = ({ flashcardSet }) => {
         )}
 
         {/* Study Button */}
-        <div className="mt-6 pt-4 border-t border-slate-100">
+        <div className="pt-5 border-t border-line">
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleStudyNow();
             }}
-            className="group/btn relative w-full h-11  bg-linear-to-r from-emerald-50 to-teal-100 text-emerald-700 text-sm p-4 rounded-xl hover:from-emerald-600 hover:to-teal-600 cursor-pointer hover:text-white font-semibold transition-all duration-200 active:scale-95 overflow-hidden"
+            className="btn btn-outline w-full h-11 group-hover:bg-accent group-hover:text-accent-fg group-hover:border-accent"
           >
-            <span className="relative z-10 flex items-center justify-center gap-2 ">
-              <Sparkles className="w-4 h-4" strokeWidth={2.5} />
-              Study Now
-            </span>
-            <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+            <Sparkles className="w-4 h-4" strokeWidth={2.5} />
+            Study now
           </button>
         </div>
       </div>

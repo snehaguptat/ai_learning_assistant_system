@@ -106,24 +106,21 @@ const DocumentListPage = () => {
     // If there is no document for the user
     if (documents.length === 0) {
       return (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center max-w-md">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 shadow-lg shadow-slate-200/50 mb-6">
-              <FileText
-                className="w-10 h-10 text-slate-400"
-                strokeWidth={1.5}
-              />
+        <div className="flex items-center justify-center py-20 bg-dots border border-dashed border-line-strong rounded-2xl">
+          <div className="text-center max-w-md px-6">
+            <div className="icon-tile icon-tile-accent w-16 h-16 rounded-xl mb-6">
+              <FileText className="w-7 h-7" strokeWidth={1.75} />
             </div>
-            <h3 className="text-xl font-medium text-slate-900 tracking-tight">
-              No Documents yet
+            <h3 className="text-2xl font-semibold text-fg mb-2">
+              No documents yet
             </h3>
-            <p className="text-sm text-slate-500 mb-6">
+            <p className="text-sm text-fg-muted mb-8 leading-relaxed">
               Get started by uploading your first PDF document to begin
               learning.
             </p>
             <button
               onClick={() => setIsUploadModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 active:scale-[0.98] cursor-pointer"
+              className="btn btn-primary btn-lg"
             >
               <Plus className="w-4 h-4" strokeWidth={2.5} />
               Upload Document
@@ -135,31 +132,38 @@ const DocumentListPage = () => {
 
     //if there are documents then return document card for all the documents
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {documents?.map((doc) => (
-          <DocumentCard
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {documents?.map((doc, i) => (
+          <div
             key={doc._id}
-            document={doc}
-            onDelete={handleDeleteRequest}
-          />
+            className="animate-fade-up h-full"
+            style={{ animationDelay: `${Math.min(i, 8) * 45}ms` }}
+          >
+            <DocumentCard document={doc} onDelete={handleDeleteRequest} />
+          </div>
         ))}
       </div>
     );
   };
 
+  const closeUploadModal = () => {
+    setIsUploadModalOpen(false);
+    setUploadFile(null);
+    setUploadTitle("");
+  };
+
   return (
     <div className="min-h-screen">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px, transparent_1px)] bg-[radial-gradient(red_1px,transparent_1px)] [background-size:16px_16px] opacity-30 pointer-events-none" />
       <div className="relative max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex items-end justify-between gap-4 mb-10">
           <div>
-            <h1 className="text-2xl font-medium text-slate-900 tracking-tight mb-2">
-              My Documents
+            <p className="eyebrow text-accent! mb-3">Library</p>
+            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
+              My documents
             </h1>
-            <p className="text-slate-500 text-sm">
-              Manage and organize your learning materials
+            <p className="text-fg-muted text-sm mt-3">
+              Manage and organize your learning materials.
             </p>
           </div>
           {/* If there are no documents then show nothing else show upload document option */}
@@ -175,27 +179,22 @@ const DocumentListPage = () => {
       </div>
 
       {isUploadModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg bg-white/95 backdrop-blur-xl border border-slate-200/60 rounded-2xl shadow-2xl shadow-slate-900/20 p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-lg bg-surface border border-line-strong rounded-2xl shadow-pop p-7 animate-pop">
             {/* Close Button */}
             <button
-              onClick={() => {
-                setIsUploadModalOpen(false);
-                setUploadFile(null);
-                setUploadTitle("");
-              }}
-              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200 cursor-pointer"
+              onClick={closeUploadModal}
+              className="absolute top-5 right-5 btn btn-ghost btn-sm px-0! w-8"
+              aria-label="Close"
             >
-              <X className="w-5 h-5" strokeWidth={2} />
+              <X className="w-4 h-4" strokeWidth={2} />
             </button>
 
             {/* Modal Header */}
-            <div className="mb-6">
-              <h2 className="text-xl font-medium text-slate-900 tracking-tight">
-                Upload New Document
-              </h2>
-              <p className="text-sm text-slate-500 mt-1">
-                Add a PDF document to your library
+            <div className="mb-6 pr-10">
+              <h2 className="text-xl font-semibold">Upload new document</h2>
+              <p className="text-sm text-fg-muted mt-1">
+                Add a PDF document to your library.
               </p>
             </div>
 
@@ -206,25 +205,21 @@ const DocumentListPage = () => {
               id="submitForm"
             >
               {/* Title Input */}
-              <div className="space-y-2">
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wide">
-                  Document Title
-                </label>
+              <div>
+                <label className="field-label">Document title</label>
                 <input
                   type="text"
                   value={uploadTitle}
                   onChange={(e) => setUploadTitle(e.target.value)}
                   required
-                  className="w-full h-12 px-4 border-2 border-slate-200 rounded-xl bg-slate-50/50 text-slate-900 placeholder-slate-400 text-sm font-medium transition-all duration-200 focus:outline-none focus:border-emerald-500 focus:bg-white focus:shadow-lg focus:shadow-emerald-500/10"
-                  placeholder="e.g.., React Interview Prep"
+                  className="field"
+                  placeholder="e.g. React Interview Prep"
                 />
               </div>
               {/* File upload */}
-              <div className="space-y-2">
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wide">
-                  PDF File
-                </label>
-                <div className="relative border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/50 hover:border-emerald-400 hover:bg-emerald-50/30 transition-all duration-200">
+              <div>
+                <label className="field-label">PDF file</label>
+                <div className="relative border border-dashed border-line-strong rounded-xl bg-canvas hover:border-accent hover:bg-accent/5 transition-colors duration-200">
                   <input
                     id="file-upload"
                     type="file"
@@ -232,28 +227,23 @@ const DocumentListPage = () => {
                     onChange={handleFileChange}
                     accept=".pdf"
                   />
-                  <div className="flex flex-col items-center justify-center py-10 px-6">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-emerald-200 to-teal-100 flex items-center justify-center mb-6">
-                      <Upload
-                        className="w-7 h-7 text-emerald-600"
-                        strokeWidth={2}
-                      />
+                  <div className="flex flex-col items-center justify-center py-9 px-6">
+                    <div className="icon-tile icon-tile-accent w-12 h-12 rounded-xl mb-4">
+                      <Upload className="w-5 h-5" strokeWidth={2} />
                     </div>
-                    <p className="text-sm font-medium text-slate-700 mb-1">
+                    <p className="text-sm font-medium text-fg mb-1 text-center break-all">
                       {uploadFile ? (
-                        <span className="text-emerald-600">
-                          {uploadFile.name}
-                        </span>
+                        <span className="text-accent">{uploadFile.name}</span>
                       ) : (
                         <>
-                          <span className="text-emerald-600">
-                            Click to upload
-                          </span>{" "}
+                          <span className="text-accent">Click to upload</span>{" "}
                           or drag and drop
                         </>
                       )}
                     </p>
-                    <p className="text-xs text-slate-500">PDF up to 10MB</p>
+                    <p className="font-mono text-[11px] text-fg-subtle">
+                      PDF up to 10MB
+                    </p>
                   </div>
                 </div>
               </div>
@@ -263,25 +253,21 @@ const DocumentListPage = () => {
                 <button
                   type="button"
                   disabled={uploading}
-                  className="flex-1 h-11 px-4 border-2 border-slate-200 rounded-xl bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => {
-                    setIsUploadModalOpen(false);
-                    setUploadFile(null);
-                    setUploadTitle("");
-                  }}
+                  className="btn btn-secondary flex-1 h-11"
+                  onClick={closeUploadModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="flex-1 h-11 px-4 bg-linear-to-r from-emerald-500 to-teal-500 rounded-xl hover:from-emerald-600 hover:to-teal-600 text-white text-sm font-semibold transition-all duration-200 shadow-lg shadow-emerald-500/25 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                  className="btn btn-primary flex-1 h-11"
                 >
                   {uploading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <>
+                      <div className="spin-sm" />
                       Uploading...
-                    </span>
+                    </>
                   ) : (
                     "Upload"
                   )}
@@ -298,7 +284,7 @@ const DocumentListPage = () => {
         title={`Delete ${selectedDoc ? selectedDoc.title : ""}`}
       >
         <div className="space-y-6">
-          <p className="text-sm text-slate-700">
+          <p className="text-sm text-fg-muted leading-relaxed">
             Are you sure you want to delete this document? This action cannot be
             undone and this document will be permanently removed.
           </p>
@@ -307,7 +293,7 @@ const DocumentListPage = () => {
               type="button"
               onClick={() => setIsDeleteModalOpen(false)}
               disabled={deleting}
-              className="px-5 h-11 bg-linear-to-br from-slate-100 to-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-xl transition-all duration-200 shadow-lg shadow-slate-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn btn-secondary h-11"
             >
               Cancel
             </button>
@@ -315,16 +301,15 @@ const DocumentListPage = () => {
               type="button"
               onClick={handleConfirmDelete}
               disabled={deleting}
-              className={`px-5 h-11 bg-linear-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-rose-500/25 hover:scale-95 active:scale-95 cursor-pointer disabled:scale-100 disabled:opacity-50 disabled:cursor-not-allowed`}
+              className="btn btn-danger h-11"
             >
               {deleting ? (
-                <span className="flex items-center gap-2">
-                  {" "}
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <>
+                  <div className="spin-sm" />
                   Deleting
-                </span>
+                </>
               ) : (
-                "Delete Set"
+                "Delete document"
               )}
             </button>
           </div>

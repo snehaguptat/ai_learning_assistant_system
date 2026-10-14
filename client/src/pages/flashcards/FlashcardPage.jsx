@@ -122,13 +122,123 @@ const FlashcardPage = () => {
       return <Spinner />;
     }
 
-    if (flashcardSets.length === 0) {
-      return <EmptyState />;
+    if (!flashcardSets || flashcards.length === 0) {
+      return (
+        <EmptyState
+          title="No flashcards yet"
+          description="Generate flashcards from this document to start studying."
+          buttonText={generating ? "Generating..." : "Generate flashcards"}
+          onActionClick={generating ? undefined : handleGenerateFlashcards}
+        />
+      );
     }
 
-    return <div>{flashcardSets._id}</div>;
+    const currentCard = flashcards[currentCardIndex];
+
+    return (
+      <div className="space-y-8">
+        <div className="max-w-lg mx-auto">
+          <Flashcard flashcard={currentCard} onToggleStar={handleToggleStar} />
+        </div>
+
+        <div className="flex items-center justify-center gap-4">
+          <Button
+            variant="secondary"
+            onClick={handlePrevCard}
+            disabled={flashcards.length <= 1}
+            className="h-11 px-5"
+          >
+            <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
+            Previous
+          </Button>
+
+          <div className="px-4 h-11 flex items-center bg-canvas border border-line rounded-lg font-mono text-sm text-fg">
+            <span className="text-accent">{currentCardIndex + 1}</span>
+            <span className="mx-1.5 text-fg-subtle">/</span>
+            {flashcards.length}
+          </div>
+
+          <Button
+            variant="secondary"
+            onClick={handleNextCard}
+            disabled={flashcards.length <= 1}
+            className="h-11 px-5"
+          >
+            Next
+            <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
+          </Button>
+        </div>
+      </div>
+    );
   };
-  return <div>{renderFlashcardContent()}</div>;
+
+  const hasCards = !loading && flashcardSets && flashcards.length > 0;
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      <div className="mb-6">
+        <Link
+          to={`/documents/${documentId}`}
+          className="group inline-flex items-center gap-2 text-sm text-fg-muted hover:text-accent transition-colors duration-150"
+        >
+          <ArrowLeft
+            className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200"
+            strokeWidth={2}
+          />
+          Back to document
+        </Link>
+      </div>
+
+      <PageHeader eyebrow="Study" title="Flashcards">
+        {hasCards && (
+          <Button variant="outline" onClick={() => setIsDeleteModalOpen(true)}>
+            <Trash2 className="w-4 h-4" strokeWidth={2} />
+            Delete set
+          </Button>
+        )}
+      </PageHeader>
+
+      {renderFlashcardContent()}
+
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Delete flashcard set"
+      >
+        <div className="space-y-6">
+          <p className="text-sm text-fg-muted leading-relaxed">
+            Are you sure you want to delete this flashcard set? This action
+            cannot be undone and all cards will be permanently removed.
+          </p>
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <Button
+              variant="secondary"
+              onClick={() => setIsDeleteModalOpen(false)}
+              disabled={deleting}
+              className="h-11"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDeleteFlashcardSet}
+              disabled={deleting}
+              className="h-11"
+            >
+              {deleting ? (
+                <>
+                  <div className="spin-sm" />
+                  Deleting
+                </>
+              ) : (
+                "Delete set"
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
 };
 
 export default FlashcardPage;

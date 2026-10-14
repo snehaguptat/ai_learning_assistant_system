@@ -78,30 +78,28 @@ const ChatInterface = () => {
     return (
       <div
         key={index}
-        className={`flex items-start gap-3 my-4 ${isUser ? "justify-end" : ""}`}
+        className={`flex items-start gap-3 my-5 animate-fade-up ${isUser ? "justify-end" : ""}`}
       >
         {!isUser && (
-          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-emerald-400 to-teal-500 shadow-lg shdadow-emerald-500/25 flex items-center justify-center shrink-0">
-            <Sparkles className="w-4 h-4 text-white" strokeWidth={2} />
+          <div className="icon-tile icon-tile-accent w-9 h-9">
+            <Sparkles className="w-4 h-4" strokeWidth={2} />
           </div>
         )}
         <div
-          className={`max-w-lg p-4 rounded-2xl shadow-sm ${
+          className={`max-w-[85%] md:max-w-xl px-4 py-3 rounded-2xl ${
             isUser
-              ? "bg-linear-to-br from-emerald-500 to-teal-500 text-white rounded-br-md"
-              : "bg-white border border-slate-200/50 text-slate-800 rounded-bl-md"
+              ? "bg-accent text-accent-fg rounded-br-sm"
+              : "bg-surface border border-line text-fg rounded-bl-sm"
           }`}
         >
           {isUser ? (
-            <p className="text-sm leading-relaxed">{msg.content}</p>
+            <p className="text-sm leading-relaxed font-medium">{msg.content}</p>
           ) : (
-            <div className="prose prose-sm max-w-none prose-slate">
-              <MarkdownRenderer content={msg.content} />
-            </div>
+            <MarkdownRenderer content={msg.content} />
           )}
         </div>
         {isUser && (
-          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-emerald-200 to-slate-300 flex items-center justify-center text-slate-700 font-semibold text-sm shrink-0 shadow-sm">
+          <div className="icon-tile w-9 h-9 font-display font-semibold text-sm text-fg">
             {user?.username?.charAt(0).toUpperCase() || "U"}
           </div>
         )}
@@ -111,34 +109,29 @@ const ChatInterface = () => {
 
   if (initialLoading) {
     return (
-      <div className="flex flex-col h-[70vh] bg-white backdrop-blur-xl border-slate-200/60 rounded-2xl items-center justify-center shadow-xl shadow-slate-200/50">
-        <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-emerald-100 to-teal-100 flex items-center justify-center mb-4">
-          <MessageSquare className="w-7 h-7 text-emerald-600" strokeWidth={2} />
+      <div className="flex flex-col h-[70vh] card items-center justify-center">
+        <div className="icon-tile icon-tile-accent w-14 h-14 rounded-xl mb-4">
+          <MessageSquare className="w-6 h-6" strokeWidth={2} />
         </div>
         <Spinner />
-        <p className="text-sm text-slate-500 mt-3 font-medium">
-          Loading chat history...
-        </p>
+        <p className="eyebrow mt-1">Loading chat history</p>
       </div>
     );
   }
   return (
-    <div className="flex flex-col h-[70vh] bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-2xl shadow-xl shadow-slate-200/50 overflow-hidden">
+    <div className="flex flex-col h-[70vh] card overflow-hidden">
       {/* Messages Area */}
-      <div className="flex-1 p-6 overflow-y-auto bg-linear-to-br from-slate-50/50 via-white/50 to-slate-50/50">
+      <div className="flex-1 px-5 md:px-8 py-4 overflow-y-auto bg-canvas/50">
         {history.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-emerald-100 to-teal-100 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/10">
-              <MessageSquare
-                className="w-8 h-8 text-emerald-600"
-                strokeWidth={2}
-              />
+            <div className="icon-tile icon-tile-accent w-14 h-14 rounded-xl mb-5">
+              <MessageSquare className="w-6 h-6" strokeWidth={2} />
             </div>
-            <h3 className="text-base font-semibold text-slate-900 mb-2">
+            <h3 className="text-xl font-semibold text-fg mb-2">
               Start a conversation
             </h3>
-            <p className="text-sm text-slate-500">
-              Ask me anything about the document!
+            <p className="text-sm text-fg-muted">
+              Ask me anything about the document.
             </p>
           </div>
         ) : (
@@ -146,22 +139,22 @@ const ChatInterface = () => {
         )}
         <div ref={messagesEndRef} />
         {loading && (
-          <div className="flex items-center gap-3 my-4">
-            <div className="w-9 h-9 rounded-xl bg-linear-to-br from-emerald-400 to-teal-500 shadow-lg shadow-emerald-500/25 flex items-center justify-center shrink-0">
-              <Sparkles className="w-4 h-4 text-white" strokeWidth={2} />
+          <div className="flex items-center gap-3 my-5">
+            <div className="icon-tile icon-tile-accent w-9 h-9">
+              <Sparkles className="w-4 h-4" strokeWidth={2} />
             </div>
-            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl rounded-bl-md bg-white border border-slate-200/60">
-              <div className="flex gap-1">
+            <div className="flex items-center px-4 h-10 rounded-2xl rounded-bl-sm bg-surface border border-line">
+              <div className="flex gap-1.5">
                 <span
-                  className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"
+                  className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce"
                   style={{ animationDelay: "0ms" }}
                 />
                 <span
-                  className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"
+                  className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce"
                   style={{ animationDelay: "150ms" }}
                 />
                 <span
-                  className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"
+                  className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce"
                   style={{ animationDelay: "300ms" }}
                 />
               </div>
@@ -171,7 +164,7 @@ const ChatInterface = () => {
       </div>
 
       {/* Input Area */}
-      <div className="p-5 border-t border-slate-200/60 bg-white/80">
+      <div className="p-4 border-t border-line bg-surface">
         <form
           onSubmit={handleSendMessage}
           className="flex items-center justify-between gap-3"
@@ -181,16 +174,17 @@ const ChatInterface = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Ask a follow-up question..."
-            className="flex-1 h-12 px-4 border-2 border-slate-200 rounded-xl bg-slate-50/50 text-slate-900 placeholder-slate-400 text-sm font-medium transition-all duration-200 focus:outline-none focus:border-emerald-500 focus:bg-white focus:shadow-lg focus:shadow-emerald-500/10"
+            className="field h-12 flex-1"
             disabled={loading}
           />
           {/* will be disabled when there is loading and there is no message in the message field */}
           <button
             type="submit"
-            className="shrink-0 w-12 h-12 bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white rounded-xl flex items-center justify-center transition-all duration-200 shadow-lg shadow-emerald-500/25 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+            className="btn btn-primary w-12 h-12 px-0!"
             disabled={loading || !message.trim()}
+            aria-label="Send message"
           >
-            <Send className="w-5 h-5" strokeWidth={2} />
+            <Send className="w-[18px] h-[18px]" strokeWidth={2.25} />
           </button>
         </form>
       </div>

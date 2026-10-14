@@ -24,8 +24,11 @@ const App = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p>Loading...</p>
+      <div className="flex items-center justify-center h-screen bg-canvas">
+        <div className="flex items-center gap-3 text-fg-muted">
+          <div className="spin-sm text-accent" />
+          <span className="eyebrow">Loading</span>
+        </div>
       </div>
     );
   }

@@ -45,28 +45,32 @@ const DocumentsDetailPage = () => {
     }
 
     if (!document || !document.data || !document.data.fileUrl) {
-      return <div className="text-center p-8 ">PDF not available.</div>;
+      return (
+        <div className="text-center p-10 text-fg-muted text-sm card">
+          PDF not available.
+        </div>
+      );
     }
     const pdfUrl = getPDFUrl();
 
     return (
-      <div className="bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
-        <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-300">
-          <span className="text-sm font-medium text-gray">Document Viewer</span>
+      <div className="card overflow-hidden">
+        <div className="flex items-center justify-between px-4 h-12 bg-raised border-b border-line">
+          <span className="eyebrow">Document viewer</span>
           <a
             href={pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
+            className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-accent-hover font-medium transition-colors duration-150"
           >
-            <ExternalLink size={16} />
+            <ExternalLink size={15} />
             Open in new tab
           </a>
         </div>
-        <div className="bg-gray-100 p-1">
+        <div className="bg-canvas p-2">
           <iframe
             src={pdfUrl}
-            className="w-full h-[70vh] bg-white rounded border border-gray-300"
+            className="w-full h-[70vh] bg-white rounded-lg"
             title="PDF viewer"
             frameBorder="0"
             style={{
@@ -96,7 +100,7 @@ const DocumentsDetailPage = () => {
   const tabs = [
     { name: "Content", label: "Content", content: renderContent() },
     { name: "Chat", label: "Chat", content: renderChat() },
-    { name: "AIActions", label: "AIActions", content: renderAIActions() },
+    { name: "AIActions", label: "AI Actions", content: renderAIActions() },
     { name: "Flashcards", label: "Flashcards", content: renderFlashcardsTab() },
     { name: "Quizzes", label: "Quizzes", content: renderQuizzesTab() },
   ];
@@ -106,20 +110,27 @@ const DocumentsDetailPage = () => {
   }
 
   if (!document) {
-    return <div className="text-center p-8">Document not found.</div>;
+    return (
+      <div className="text-center p-10 text-fg-muted text-sm">
+        Document not found.
+      </div>
+    );
   }
   return (
-    <div>
-      <div className="mb-4">
+    <div className="max-w-6xl mx-auto">
+      <div className="mb-6">
         <Link
           to={"/documents"}
-          className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors duration-200"
+          className="group inline-flex items-center gap-2 text-sm text-fg-muted hover:text-accent transition-colors duration-150"
         >
-          <ArrowLeft size={16} />
-          Back to Documents
+          <ArrowLeft
+            size={16}
+            className="group-hover:-translate-x-1 transition-transform duration-200"
+          />
+          Back to documents
         </Link>
       </div>
-      <PageHeader title={document.data.title} />
+      <PageHeader eyebrow="Document" title={document.data.title} />
       <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
     </div>
   );

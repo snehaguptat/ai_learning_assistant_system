@@ -178,14 +178,14 @@ const FlashcardPage = () => {
     <div className="max-w-3xl mx-auto">
       <div className="mb-6">
         <Link
-          to={`/documents/${documentId}`}
+          to={`/flashcards`}
           className="group inline-flex items-center gap-2 text-sm text-fg-muted hover:text-accent transition-colors duration-150"
         >
           <ArrowLeft
             className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200"
             strokeWidth={2}
           />
-          Back to document
+          Back to flashcard sets
         </Link>
       </div>
 

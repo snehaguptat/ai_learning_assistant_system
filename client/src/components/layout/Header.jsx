@@ -1,10 +1,16 @@
 import React from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Bell, Menu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ toggleSidebar }) => {
   const { user } = useAuth();
   const initial = (user?.username || "U").charAt(0).toUpperCase();
+  const navigate = useNavigate();
+
+  const navigateProfile = () => {
+    navigate("/profile");
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full h-16 bg-canvas/70 backdrop-blur-md border-b border-line">
@@ -33,7 +39,10 @@ const Header = ({ toggleSidebar }) => {
           </button>
 
           {/* User */}
-          <div className="flex items-center gap-3 pl-4 ml-2 border-l border-line">
+          <div
+            className="flex items-center gap-3 pl-4 ml-2 border-l border-line cursor-pointer"
+            onClick={navigateProfile}
+          >
             <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/30 text-accent flex items-center justify-center font-display font-semibold text-sm">
               {initial}
             </div>

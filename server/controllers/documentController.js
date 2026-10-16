@@ -213,33 +213,62 @@ export const getDocument = async (req, res, next) => {
 // @route DELETE /api/documents/:id
 // @access private
 export const deleteDocument = async (req, res, next) => {
+  const session = await mongoose.startSession();
   try {
-    const document = await Document.findOne({
-      _id: req.params.id,
-      userId: req.user._id,
+    let deleted = false;
+    await session.withTransaction(async () => {
+      const document = await Document.findOne(
+        {
+          _id: req.params.id,
+          userId: req.user._id,
+        },
+        null,
+        { session },
+      );
+
+      if (!document) {
+        return res.status(404).json({
+          success: false,
+          error: "Document not found",
+          statusCode: 404,
+        });
+      }
+
+      await Flashcard.deleteMany({ documentId: document._id }, { session });
+
+      await Quiz.deleteMany({ documentId: document._id }, { session });
+
+      //delete file from cloudinary
+      const response = await cloudinary.uploader.destroy(
+        document.cloudinaryId,
+        {
+          resource_type: "image",
+        },
+      );
+
+      //delete document
+      await document.deleteOne({ _id: document._id }, { session });
+
+      // just for testing that transaction is working or not
+      // throw new Error("test");
+      deleted = true;
     });
 
-    if (!document) {
+    if (!deleted) {
       return res.status(404).json({
-        success: false,
-        error: "Document not found",
-        statusCode: 404,
+        success: true,
+        message: "Document not found",
       });
     }
 
-    //delete file from cloudinary
-    const response = await cloudinary.uploader.destroy(document.cloudinaryId, {
-      resource_type: "image",
-    });
-
-    //delete document
-    await document.deleteOne();
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Document deleted successfully",
+      message: "Document, flashcards, and quizzes deleted successfully.",
     });
   } catch (error) {
     next(error);
+  } finally {
+    session.endSession();
   }
 };
 

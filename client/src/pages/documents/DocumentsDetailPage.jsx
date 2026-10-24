@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { useParams, Link } from "react-router-dom";
 import documentService from "../../services/documentService.js";
 import Spinner from "../../components/common/Spinner.jsx";
@@ -6,10 +6,14 @@ import toast from "react-hot-toast";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import PageHeader from "../../components/common/PageHeader.jsx";
 import Tabs from "../../components/common/Tabs.jsx";
-import ChatInterface from "../../components/chat/ChatInterface.jsx";
-import AIActions from "../../components/ai/AIActions.jsx";
 import FlashcardManager from "../../components/flashcards/FlashcardManager.jsx";
 import QuizManager from "../../components/quizzes/QuizManager.jsx";
+
+const ChatInterface = lazy(
+  () => import("../../components/chat/ChatInterface.jsx"),
+);
+
+const AIActions = lazy(() => import("../../components/ai/AIActions.jsx"));
 
 const DocumentsDetailPage = () => {
   const { id } = useParams();
@@ -83,11 +87,19 @@ const DocumentsDetailPage = () => {
   };
 
   const renderChat = () => {
-    return <ChatInterface />;
+    return (
+      <Suspense fallback={<Spinner />}>
+        <ChatInterface />
+      </Suspense>
+    );
   };
 
   const renderAIActions = () => {
-    return <AIActions />;
+    return (
+      <Suspense fallback={<Spinner />}>
+        <AIActions />
+      </Suspense>
+    );
   };
 
   const renderFlashcardsTab = () => {
